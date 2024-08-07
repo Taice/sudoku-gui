@@ -22,7 +22,7 @@ int main()
     mode md = INSERT;
 
     InitWindow(500, 500, "Sudoku GUI");
-    Font arial = LoadFontEx("./resources/Arial.ttf", 256, 0, 1000);
+    Font font = LoadFontEx("resources/montserrat.ttf", 256, 0, 1000);
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
@@ -64,10 +64,10 @@ int main()
                     color);
                 ch[0] = sudoku[i][j] + '0';
                 DrawTextEx(
-                    arial, sudoku[i][j] == 0 ? " " : ch,
+                    font, sudoku[i][j] == 0 ? " " : ch,
                     CLITERAL(Vector2){
                         j * 55 + j +
-                            (27 - (MeasureTextEx(arial, ch, 50, 2).x / 2)),
+                            (27 - (MeasureTextEx(font, ch, 50, 2).x / 2)),
 
                         i * 55 + 4 + i},
                     50, 2, BLACK);
@@ -81,7 +81,7 @@ int main()
                         }
                         char note[2] = {k + '1', '\0'};
                         DrawTextEx(
-                            arial, note,
+                            font, note,
                             CLITERAL(Vector2){
                                 j * 55 + j + 18 * (k % 3) + 4,
                                 i * 55 + i + 18 * floor(k / 3.0f)},
@@ -145,6 +145,6 @@ int main()
         }
         EndDrawing();
     }
-    UnloadFont(arial);
+    UnloadFont(font);
     CloseWindow();
 }
