@@ -19,3 +19,5 @@ v - visual mode, press number after selecting an area - all selected nodes get t
 i - insert mode - default mode, press number to insert it into the grid at the current node
 n - notes mode, press number to insert a note into this node
 
+vim keybinds for movement
+
