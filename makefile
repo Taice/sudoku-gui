@@ -4,7 +4,7 @@ CFLAGS := -Wall -g
 SRCFILES := $(wildcard ./src/*.c)
 OBJFILES := $(SRCFILES:.cpp=.o)
 
-LINK := -lraylib
+LINK := -lraylib -lm
 
 OUTPUT := sudoku-gui
 

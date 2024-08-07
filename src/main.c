@@ -2,9 +2,9 @@
 #include "mode.h"
 #include "position.h"
 #include "sudoku_functions.h"
+#include <math.h>
 #include <raylib.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <unistd.h>
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -22,6 +22,7 @@ int main()
     mode md = INSERT;
 
     InitWindow(500, 500, "Sudoku GUI");
+    Font arial = LoadFontEx("./resources/Arial.ttf", 256, 0, 1000);
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
@@ -62,12 +63,14 @@ int main()
                     j * (500 / 9) + j, i * (500 / 9) + i, (500 / 9), (500 / 9),
                     color);
                 ch[0] = sudoku[i][j] + '0';
-                DrawText(
-                    sudoku[i][j] == 0 ? " " : ch,
-                    j * (500 / 9) + j + (500 / 9 / 2) -
-                        (MeasureText(ch, 50) / 2),
+                DrawTextEx(
+                    arial, sudoku[i][j] == 0 ? " " : ch,
+                    CLITERAL(Vector2){
+                        j * 55 + j +
+                            (27 - (MeasureTextEx(arial, ch, 50, 2).x / 2)),
 
-                    i * (500 / 9) - 2 + i + 7, 50, BLACK);
+                        i * 55 + 4 + i},
+                    50, 2, BLACK);
                 if (sudoku[i][j] == 0)
                 {
                     for (int k = 0; k < 9; k++)
@@ -77,11 +80,12 @@ int main()
                             continue;
                         }
                         char note[2] = {k + '1', '\0'};
-                        DrawText(
-                            note,
-                            j * (500 / 9) + j + (500 / 9 / 3) * (k % 3) + 4,
-                            i * (500 / 9) + i + (500 / 9 / 3) * (k / 3), 20,
-                            DARKGRAY);
+                        DrawTextEx(
+                            arial, note,
+                            CLITERAL(Vector2){
+                                j * 55 + j + 18 * (k % 3) + 4,
+                                i * 55 + i + 18 * floor(k / 3.0f)},
+                            20, 0, DARKGRAY);
                     }
                 }
             }
@@ -101,7 +105,7 @@ int main()
 
         if (num == -2)
         {
-			 startpos = highlight;
+            startpos = highlight;
         }
 
         if (num != -1 && num != -2)
@@ -141,5 +145,6 @@ int main()
         }
         EndDrawing();
     }
+    UnloadFont(arial);
     CloseWindow();
 }
