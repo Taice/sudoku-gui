@@ -4,5 +4,6 @@ typedef enum
 {
     VISUAL,
     NOTE,
-    INSERT
+    INSERT,
+	MISSING
 } mode;
