@@ -14,7 +14,7 @@ $(OUTPUT) : $(OBJFILES)
 	$(CC) $(CFLAGS) $^ -o ./bin/$@ $(LINK)
 
 %.o : %.c 
-	$(CC) $(CFLAGS) -c $^ $(LINK)
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 run : 
 	make
