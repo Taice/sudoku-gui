@@ -2,7 +2,7 @@ CC := clang
 CFLAGS := -Wall -g
 
 SRCFILES := $(wildcard ./src/*.c)
-OBJFILES := $(SRCFILES:.cpp=.o)
+OBJFILES := $(SRCFILES:.c=.o)
 
 LINK := -lraylib -lm
 
@@ -13,7 +13,7 @@ all : $(OUTPUT)
 $(OUTPUT) : $(OBJFILES)
 	$(CC) $(CFLAGS) $^ -o ./bin/$@ $(LINK)
 
-%.o : %.cpp $.hpp
+%.o : %.c 
 	$(CC) $(CFLAGS) -c $^ $(LINK)
 
 run : 
