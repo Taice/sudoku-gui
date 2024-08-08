@@ -6,19 +6,19 @@ OBJFILES := $(SRCFILES:.c=.o)
 
 LINK := -lraylib -lm
 
-OUTPUT := sudoku-gui
+OUTPUT := bin/sudoku-gui
 
 all : $(OUTPUT)
 
 $(OUTPUT) : $(OBJFILES)
-	$(CC) $(CFLAGS) $^ -o ./bin/$@ $(LINK)
+	$(CC) $(CFLAGS) $^ -o $@ $(LINK)
 
 %.o : %.c 
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 run : 
 	make
-	./bin/$(OUTPUT)
+	$(OUTPUT)
 
 clean : 
 	rm $(OBJFILES) $(OUTPUT)
