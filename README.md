@@ -18,6 +18,7 @@ do `make run` inside the git directory
 v - visual mode, press number after selecting an area - all selected nodes get that number added as a node
 i - insert mode - default mode, press number to insert it into the grid at the current node
 n - notes mode, press number to insert a note into this node
+r - double tap 'r' to reset board
 
 vim keybinds for movement
 

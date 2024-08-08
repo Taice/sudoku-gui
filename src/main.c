@@ -18,6 +18,7 @@ int main()
     bool notes[SIZE][SIZE][SIZE] = {false};
     char ch[2];
     ch[1] = '\0';
+    bool should_reset = false;
 
     mode md = INSERT;
 
@@ -37,13 +38,13 @@ int main()
                 {
                     if (getBoxIndex(highlight.y, highlight.x) ==
                             getBoxIndex(i, j) ||
-                        (highlight.y == i || highlight.x == j) ||
-                        (sudoku[highlight.y][highlight.x] == sudoku[i][j] &&
-                         sudoku[highlight.y][highlight.x] != 0))
+                        (highlight.y == i || highlight.x == j))
                     {
                         color = CLITERAL(Color){172, 186, 250, 255};
                     }
-                    if (highlight.y == i && highlight.x == j)
+                    if (highlight.y == i && highlight.x == j ||
+                        sudoku[highlight.y][highlight.x] == sudoku[i][j] &&
+                            sudoku[highlight.y][highlight.x] != 0)
                     {
                         color = CLITERAL(Color){134, 151, 255, 255};
                     }
@@ -100,15 +101,12 @@ int main()
             DrawRectangle(
                 (500 / 3) + (500 / 3) * i + (i * 2), 0, 3, 500, BLACK);
         }
-        int num =
-            handleInput(&highlight.y, &highlight.x, GetCharPressed(), &md);
+        int num;
 
-        if (num == -2)
+        switch (handleInput(
+            &highlight.y, &highlight.x, GetCharPressed(), &md, &num))
         {
-            startpos = highlight;
-        }
-
-        if (num != -1 && num != -2)
+        case 0:
         {
             switch (md)
             {
@@ -142,6 +140,38 @@ int main()
                 }
                 break;
             }
+            should_reset = false;
+            break;
+        }
+        case -2:
+            startpos = highlight;
+            should_reset = false;
+            break;
+        case -3:
+            if (should_reset)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    for (int j = 0; j < 9; j++)
+                    {
+                        sudoku[i][j] = 0;
+                        for (int k = 0; k < 9; k++)
+                        {
+                            notes[i][j][k] = false;
+                        }
+                    }
+                }
+                should_reset = false;
+                break;
+            }
+            should_reset = true;
+            break;
+
+        case -1:
+            should_reset = false;
+            break;
+        default:
+            break;
         }
         EndDrawing();
     }

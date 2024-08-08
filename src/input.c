@@ -1,63 +1,74 @@
 #include "input.h"
 
-int handleInput(int *row, int *col, char ch, mode *md)
+int handleInput(int *row, int *col, char ch, mode *md, int *num)
 {
-    if (ch == 'h')
+    switch (ch)
+    {
+    case 'h':
     {
         if (*col > 0)
         {
             (*col)--;
-            return -1;
         }
         return -1;
+        break;
     }
-    if (ch == 'l')
+    case 'l':
     {
         if (*col < 8)
         {
             (*col)++;
-            return -1;
         }
         return -1;
+        break;
     }
-    if (ch == 'j')
+    case 'j':
     {
         if (*row < 8)
         {
             (*row)++;
-            return -1;
         }
         return -1;
+        break;
     }
-    if (ch == 'k')
+    case 'k':
     {
         if (*row > 0)
         {
             (*row)--;
-            return -1;
         }
         return -1;
-    }
-    if (ch > '0' && ch <= '9')
-    {
-        return ch - '0';
+        break;
     }
 
-    if (ch == 'n')
+    case 'n':
     {
         (*md) = NOTE;
         return -1;
+        break;
     }
-    if (ch == 'i')
+    case 'i':
     {
         (*md) = INSERT;
         return -1;
+        break;
     }
-    if (ch == 'v')
+    case 'v':
     {
         (*md) = VISUAL;
         return -2;
+        break;
     }
+    case 'r':
+        return -3;
+        break;
+    default:
 
-    return -1;
+        if (ch > '0' && ch <= '9')
+        {
+            (*num) = ch - '0';
+            return 0;
+        }
+    }
+    return -4;
 }
