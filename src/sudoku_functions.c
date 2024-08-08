@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdbool.h>
 #include <unistd.h>
 
@@ -105,6 +106,56 @@ bool backtrack(int sudoku[SIZE][SIZE])
 
 int getBoxIndex(int row, int col)
 {
-
     return (row / SUBGRID_SIZE) * SUBGRID_SIZE + col / SUBGRID_SIZE;
+}
+
+void getMissingBox(int row, int col, bool missing[SIZE], int sudoku[SIZE][SIZE])
+{
+    int t_row = floor(row / 3.0) * 3;
+    int t_col = floor(col / 3.0) * 3;
+    for (int num = 0; num < SIZE; num++)
+    {
+        missing[num] = true;
+        for (int i = t_row; i < t_row + 3; i++)
+        {
+            for (int j = t_col; j < t_col + 3; j++)
+            {
+                if (sudoku[i][j] == num + 1)
+                {
+                    missing[num] = false;
+                }
+            }
+        }
+    }
+}
+
+void getMissingCol(int col, bool missing[SIZE], int sudoku[SIZE][SIZE])
+{
+    for (int num = 0; num < SIZE; num++)
+    {
+        missing[num] = true;
+        for (int row = 0; row < SIZE; row++)
+        {
+            if (sudoku[row][col] == num + 1)
+            {
+                missing[num] = false;
+            }
+        }
+    }
+}
+
+void getMissingRow(int row, bool missing[SIZE], int sudoku[SIZE][SIZE])
+{
+
+    for (int num = 0; num < SIZE; num++)
+    {
+        missing[num] = true;
+        for (int col = 0; col < SIZE; col++)
+        {
+            if (sudoku[row][col] == num + 1)
+            {
+                missing[num] = false;
+            }
+        }
+    }
 }
