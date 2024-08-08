@@ -42,9 +42,9 @@ int main()
                     {
                         color = CLITERAL(Color){172, 186, 250, 255};
                     }
-                    if (highlight.y == i && highlight.x == j ||
-                        sudoku[highlight.y][highlight.x] == sudoku[i][j] &&
-                            sudoku[highlight.y][highlight.x] != 0)
+                    if ((highlight.y == i && highlight.x == j) ||
+                        (sudoku[highlight.y][highlight.x] == sudoku[i][j] &&
+                         sudoku[highlight.y][highlight.x] != 0))
                     {
                         color = CLITERAL(Color){134, 151, 255, 255};
                     }
@@ -138,6 +138,8 @@ int main()
                         notes[i][j][num - 1] = !notes[i][j][num - 1];
                     }
                 }
+                break;
+            case MISSING:
                 break;
             }
             should_reset = false;
