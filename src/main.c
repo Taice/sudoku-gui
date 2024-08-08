@@ -5,6 +5,7 @@
 #include <math.h>
 #include <raylib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <unistd.h>
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -16,6 +17,7 @@ int main()
     pos startpos;
     int sudoku[SIZE][SIZE] = {0};
     bool notes[SIZE][SIZE][SIZE] = {false};
+    bool missing[SIZE];
     char ch[2];
     ch[1] = '\0';
     bool should_reset = false;
@@ -174,6 +176,75 @@ int main()
             break;
         default:
             break;
+        }
+        if (md == MISSING)
+        {
+            Vector2 offset = CLITERAL(Vector2){
+                floor(500 / 2.0) - floor(100 / 2.0),
+                floor(500 / 2.0) - floor(70 / 2.0)};
+            DrawRectangle(offset.x - 1, offset.y - 1, 104 + 1, 74 + 1, BLACK);
+            DrawRectangle(offset.x + 1, offset.y + 1, 100 + 1, 70 + 1, WHITE);
+
+            offset.x += 9;
+            offset.y += 4;
+
+            int defaultX = offset.x;
+
+            char ch[2] = {5, '\0'};
+
+            DrawTextEx(
+                font, "B: ", CLITERAL(Vector2){offset.x, offset.y}, 15, 0,
+                BLACK);
+
+            offset.x += MeasureTextEx(font, "B: ", 15, 2).x;
+
+            getMissingBox(highlight.y, highlight.x, missing, sudoku);
+
+            for (int i = 0; i < SIZE; i++)
+            {
+                ch[0] = missing[i] == true ? i + '1' : ' ';
+                DrawTextEx(font, ch, offset, 15, 3, BLACK);
+                offset.x +=
+                    strcmp(" ", ch) == 0 ? 0 : MeasureTextEx(font, ch, 15, 3).x;
+            }
+
+            offset.y += MeasureTextEx(font, ch, 15, 3).y + 9;
+            offset.x = defaultX;
+
+            DrawTextEx(
+                font, "R: ", CLITERAL(Vector2){offset.x, offset.y}, 15, 0,
+                BLACK);
+
+            offset.x += MeasureTextEx(font, "R: ", 15, 2).x;
+
+            getMissingRow(highlight.y, missing, sudoku);
+
+            for (int i = 0; i < SIZE; i++)
+            {
+                ch[0] = missing[i] == true ? i + '1' : ' ';
+                DrawTextEx(font, ch, offset, 15, 3, BLACK);
+                offset.x +=
+                    strcmp(" ", ch) == 0 ? 0 : MeasureTextEx(font, ch, 15, 3).x;
+            }
+
+            offset.y += MeasureTextEx(font, ch, 15, 3).y + 9;
+            offset.x = defaultX;
+
+            DrawTextEx(
+                font, "C: ", CLITERAL(Vector2){offset.x, offset.y}, 15, 0,
+                BLACK);
+
+            offset.x += MeasureTextEx(font, "C: ", 15, 2).x;
+
+            getMissingCol(highlight.x, missing, sudoku);
+
+            for (int i = 0; i < SIZE; i++)
+            {
+                ch[0] = missing[i] == true ? i + '1' : ' ';
+                DrawTextEx(font, ch, offset, 15, 3, BLACK);
+                offset.x +=
+                    strcmp(" ", ch) == 0 ? 0 : MeasureTextEx(font, ch, 15, 3).x;
+            }
         }
         EndDrawing();
     }

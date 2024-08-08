@@ -40,7 +40,12 @@ int handleInput(int *row, int *col, char ch, mode *md, int *num)
         return -1;
         break;
     }
-
+    case 'm':
+    {
+        (*md) = MISSING;
+        return -1;
+        break;
+    }
     case 'n':
     {
         (*md) = NOTE;
