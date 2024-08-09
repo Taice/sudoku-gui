@@ -3,10 +3,10 @@
 #include <unistd.h>
 
 #include "sudoku_functions.h"
-bool findEmptySpace(int sudoku[SIZE][SIZE], int *row, int *col);
+bool findEmptySpace(char sudoku[SIZE][SIZE], int *row, int *col);
 
-short isWinnable(int sudoku[SIZE][SIZE]) {
-  int clone[SIZE][SIZE];
+short isWinnable(char sudoku[SIZE][SIZE]) {
+  char clone[SIZE][SIZE];
 
   for (int i = 0; i < SIZE; i++) {
     for (int j = 0; j < SIZE; j++) {
@@ -28,7 +28,7 @@ short isWinnable(int sudoku[SIZE][SIZE]) {
   return -1;
 }
 
-bool isValid(int sudoku[SIZE][SIZE]) {
+bool isValid(char sudoku[SIZE][SIZE]) {
   bool rows[SIZE][SIZE] = {false};
   bool cols[SIZE][SIZE] = {false};
   bool boxes[SIZE][SIZE] = {false};
@@ -52,7 +52,7 @@ bool isValid(int sudoku[SIZE][SIZE]) {
   return true;
 }
 
-bool findEmptySpace(int sudoku[SIZE][SIZE], int *row, int *col) {
+bool findEmptySpace(char sudoku[SIZE][SIZE], int *row, int *col) {
   for (*row = 0; *row < SIZE; (*row)++) {
     for (*col = 0; *col < SIZE; (*col)++) {
       if (sudoku[*row][*col] == 0) {
@@ -63,7 +63,7 @@ bool findEmptySpace(int sudoku[SIZE][SIZE], int *row, int *col) {
   return false;
 }
 
-bool backtrack(int sudoku[SIZE][SIZE]) {
+bool backtrack(char sudoku[SIZE][SIZE]) {
   int row, col;
 
   if (!findEmptySpace(sudoku, &row, &col)) {
@@ -89,7 +89,7 @@ int getBoxIndex(int row, int col) {
 }
 
 void getMissingBox(int row, int col, bool missing[SIZE],
-                   int sudoku[SIZE][SIZE]) {
+                   char sudoku[SIZE][SIZE]) {
   int t_row = floor(row / 3.0) * 3;
   int t_col = floor(col / 3.0) * 3;
   for (int num = 0; num < SIZE; num++) {
@@ -104,7 +104,7 @@ void getMissingBox(int row, int col, bool missing[SIZE],
   }
 }
 
-void getMissingCol(int col, bool missing[SIZE], int sudoku[SIZE][SIZE]) {
+void getMissingCol(int col, bool missing[SIZE], char sudoku[SIZE][SIZE]) {
   for (int num = 0; num < SIZE; num++) {
     missing[num] = true;
     for (int row = 0; row < SIZE; row++) {
@@ -115,7 +115,7 @@ void getMissingCol(int col, bool missing[SIZE], int sudoku[SIZE][SIZE]) {
   }
 }
 
-void getMissingRow(int row, bool missing[SIZE], int sudoku[SIZE][SIZE]) {
+void getMissingRow(int row, bool missing[SIZE], char sudoku[SIZE][SIZE]) {
 
   for (int num = 0; num < SIZE; num++) {
     missing[num] = true;
@@ -127,7 +127,7 @@ void getMissingRow(int row, bool missing[SIZE], int sudoku[SIZE][SIZE]) {
   }
 }
 
-void calcCheats(bool cheats[SIZE][SIZE][SIZE], int sudoku[SIZE][SIZE]) {
+void calcCheats(bool cheats[SIZE][SIZE][SIZE], char sudoku[SIZE][SIZE]) {
   for (int i = 0; i < SIZE; i++) {
     for (int j = 0; j < SIZE; j++) {
       bool missing[] = {true, true, true, true, true, true, true, true, true};

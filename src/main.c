@@ -15,7 +15,7 @@
 int main(int argc, char **argv) {
   pos highlight = {4, 4};
   pos startpos;
-  int sudoku[SIZE][SIZE] = {0};
+  char sudoku[SIZE][SIZE] = {0};
   bool notes[SIZE][SIZE][SIZE] = {false};
   bool cheats[SIZE][SIZE][SIZE] = {false};
   bool missing[SIZE];
