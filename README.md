@@ -1,5 +1,6 @@
 # SUDOKU-GUI
-## dependencies
+
+## dependencies (ONLY INSTALL IF YOU PLAN ON BUILDING PROJECT YOURSELF)
 ### raylib:
 #### ARCH BASED
 install raylib package using aur helper
@@ -11,9 +12,12 @@ i have no clue youre on your own
 install the base-devel package
 #### DEBIAN BASED ( for the most part )
 install the build-essential package
+### how to run
+`make run` inside the git directory
 
-## how to run
-do `make run` inside the git directory
+
+## how to install executable:
+go to the releases page and follow the instructions
 
 ## how to use
 v - visual mode, press number after selecting an area - all selected nodes get that number added as a node <br>
