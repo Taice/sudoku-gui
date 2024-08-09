@@ -1,13 +1,13 @@
 # SUDOKU-GUI
 
-## dependencies (ONLY INSTALL IF YOU PLAN ON BUILDING PROJECT YOURSELF)
+## dependencies
 ### raylib:
 #### ARCH BASED
 install raylib package using aur helper
 #### ANYTHING ELSE
 i have no clue youre on your own
 
-### cmake:
+### make (ONLY INSTALL IF YOU PLAN ON BUILDING PROJECT YOURSELF):
 #### ARCH BASED
 install the base-devel package
 #### DEBIAN BASED ( for the most part )
