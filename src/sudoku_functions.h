@@ -12,3 +12,4 @@ int getBoxIndex(int row, int col);
 void getMissingBox(int row, int col, bool missing[SIZE], int sudoku[SIZE][SIZE]);
 void getMissingCol(int col, bool missing[SIZE], int sudoku[SIZE][SIZE]);
 void getMissingRow(int row, bool missing[SIZE], int sudoku[SIZE][SIZE]);
+void calcCheats(bool cheats[SIZE][SIZE][SIZE], int sudoku[SIZE][SIZE]);

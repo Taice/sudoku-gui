@@ -1,3 +1,4 @@
+#include "framerate.h"
 #include "input.h"
 #include "mode.h"
 #include "position.h"
@@ -11,22 +12,26 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-int main()
+int main(int argc, char **argv)
 {
     pos highlight = {4, 4};
     pos startpos;
     int sudoku[SIZE][SIZE] = {0};
     bool notes[SIZE][SIZE][SIZE] = {false};
+    bool cheats[SIZE][SIZE][SIZE] = {false};
     bool missing[SIZE];
     char ch[2];
     ch[1] = '\0';
-    bool should_reset = false;
+    char should = 0;
+    bool cheatable = !(argc == 1);
+    bool cheating = false;
+    calcCheats(cheats, sudoku);
 
     mode md = INSERT;
 
     InitWindow(500, 500, "Sudoku GUI");
     Font font = LoadFontEx("resources/montserrat.ttf", 256, 0, 1000);
-    SetTargetFPS(60);
+    SetTargetFPS(framerate);
     while (!WindowShouldClose())
     {
         BeginDrawing();
@@ -76,19 +81,39 @@ int main()
                     50, 2, BLACK);
                 if (sudoku[i][j] == 0)
                 {
-                    for (int k = 0; k < 9; k++)
+                    if (cheating)
                     {
-                        if (!notes[i][j][k])
+                        for (int k = 0; k < 9; k++)
                         {
-                            continue;
+                            if (!cheats[i][j][k])
+                            {
+                                continue;
+                            }
+                            char note[2] = {k + '1', '\0'};
+                            DrawTextEx(
+                                font, note,
+                                CLITERAL(Vector2){
+                                    j * 55 + j + 18 * (k % 3) + 4,
+                                    i * 55 + i + 18 * floor(k / 3.0f)},
+                                20, 0, DARKGRAY);
                         }
-                        char note[2] = {k + '1', '\0'};
-                        DrawTextEx(
-                            font, note,
-                            CLITERAL(Vector2){
-                                j * 55 + j + 18 * (k % 3) + 4,
-                                i * 55 + i + 18 * floor(k / 3.0f)},
-                            20, 0, DARKGRAY);
+                    }
+                    else
+                    {
+                        for (int k = 0; k < 9; k++)
+                        {
+                            if (!notes[i][j][k])
+                            {
+                                continue;
+                            }
+                            char note[2] = {k + '1', '\0'};
+                            DrawTextEx(
+                                font, note,
+                                CLITERAL(Vector2){
+                                    j * 55 + j + 18 * (k % 3) + 4,
+                                    i * 55 + i + 18 * floor(k / 3.0f)},
+                                20, 0, DARKGRAY);
+                        }
                     }
                 }
             }
@@ -124,9 +149,16 @@ int main()
                 {
                     return 0;
                 }
+                calcCheats(cheats, sudoku);
                 break;
             }
             case NOTE:
+                if (cheating)
+                {
+                    cheats[highlight.y][highlight.x][num - 1] =
+                        !cheats[highlight.y][highlight.x][num - 1];
+                    break;
+                }
                 notes[highlight.y][highlight.x][num - 1] =
                     !notes[highlight.y][highlight.x][num - 1];
                 break;
@@ -141,18 +173,21 @@ int main()
                     }
                 }
                 break;
-            case MISSING:
+            default:
                 break;
             }
-            should_reset = false;
+            should = 0;
             break;
         }
         case -2:
+        {
             startpos = highlight;
-            should_reset = false;
+            should = 0;
             break;
+        }
         case -3:
-            if (should_reset)
+        {
+            if (should == 'r')
             {
                 for (int i = 0; i < 9; i++)
                 {
@@ -165,19 +200,34 @@ int main()
                         }
                     }
                 }
-                should_reset = false;
+                should = 0;
                 break;
             }
-            should_reset = true;
+            should = 'r';
             break;
+        }
+        case -4:
+        {
+            if (should == 'c')
+            {
+                cheating = cheatable ? !cheating : false;
+                break;
+            }
+            should = 'c';
+            break;
+        }
 
         case -1:
-            should_reset = false;
+        {
+            should = 0;
             break;
+        }
         default:
             break;
         }
-        if (md == MISSING)
+        switch (md)
+        {
+        case MISSING:
         {
             Vector2 offset = CLITERAL(Vector2){
                 floor(500 / 2.0) - floor(100 / 2.0),
@@ -245,6 +295,9 @@ int main()
                 offset.x +=
                     strcmp(" ", ch) == 0 ? 0 : MeasureTextEx(font, ch, 15, 3).x;
             }
+        }
+        default:
+            break;
         }
         EndDrawing();
     }

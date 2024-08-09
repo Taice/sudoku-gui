@@ -5,5 +5,6 @@ typedef enum
     VISUAL,
     NOTE,
     INSERT,
-	MISSING
+    MISSING,
+    CHEATING
 } mode;

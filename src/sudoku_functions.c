@@ -159,3 +159,58 @@ void getMissingRow(int row, bool missing[SIZE], int sudoku[SIZE][SIZE])
         }
     }
 }
+
+void calcCheats(bool cheats[SIZE][SIZE][SIZE], int sudoku[SIZE][SIZE])
+{
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            bool missing[] = {true, true, true, true, true,
+                              true, true, true, true};
+            for (int num = 0; num < SIZE; num++)
+            {
+                for (int col = 0; col < SIZE; col++)
+                {
+                    if (sudoku[i][col] == num + 1)
+                    {
+                        missing[num] = false;
+                    }
+                }
+            }
+            for (int num = 0; num < SIZE; num++)
+            {
+                for (int row = 0; row < SIZE; row++)
+                {
+                    if (sudoku[row][j] == num + 1)
+                    {
+                        missing[num] = false;
+                    }
+                }
+            }
+            int t_row = floor(i / 3.0) * 3;
+            int t_col = floor(j / 3.0) * 3;
+            for (int num = 0; num < SIZE; num++)
+            {
+                for (int i = t_row; i < t_row + 3; i++)
+                {
+                    for (int j = t_col; j < t_col + 3; j++)
+                    {
+                        if (sudoku[i][j] == num + 1)
+                        {
+                            missing[num] = false;
+                        }
+                    }
+                }
+            }
+            for (int k = 0; k < SIZE; k++)
+            {
+                cheats[i][j][k] = false;
+                if (missing[k])
+                {
+                    cheats[i][j][k] = true;
+                }
+            }
+        }
+    }
+}

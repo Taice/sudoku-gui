@@ -65,15 +65,21 @@ int handleInput(int *row, int *col, char ch, mode *md, int *num)
         break;
     }
     case 'r':
+    {
         return -3;
         break;
+    }
+    case 'c':
+    {
+        return -4;
+        break;
+    }
     default:
-
         if (ch > '0' && ch <= '9')
         {
             (*num) = ch - '0';
             return 0;
         }
     }
-    return -4;
+    return 1;
 }
