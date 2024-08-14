@@ -22,7 +22,6 @@ int main(int argc, char **argv) {
   pos highlight = {4, 4};
   mode md = INSERT;
   int hlnum = -1;
-  int counter = 0;
   char should = 0;
   char sudoku[SIZE][SIZE] = {0};
   bool notes[SIZE][SIZE][SIZE] = {false};
@@ -181,7 +180,6 @@ int main(int argc, char **argv) {
     }
     case -2: {
       visualpos = highlight;
-      counter++;
       should = 0;
       break;
     }
@@ -281,9 +279,6 @@ int main(int argc, char **argv) {
       break;
     }
 
-    char text[2] = {counter + '0', '\0'};
-
-    DrawText(text, 0, 30, 50, ORANGE);
     EndDrawing();
   }
   UnloadFont(font);
