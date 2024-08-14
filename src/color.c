@@ -38,7 +38,7 @@ void updateColors(Scheme *scheme) {
     scheme->highlight = (Color){69, 133, 136, 255};
     break;
   case GRUVBOX:
-    scheme->highlight = (Color){181, 118, 20, 255};
+    scheme->highlight = (Color){250, 189, 100, 255};
     break;
   }
   switch (scheme->th) {
@@ -46,7 +46,7 @@ void updateColors(Scheme *scheme) {
     scheme->lowlight = (Color){131, 165, 152, 255};
     break;
   case GRUVBOX:
-    scheme->lowlight = (Color){215, 153, 33, 255};
+    scheme->lowlight = (Color){213, 196, 161, 255};
     break;
   }
 }

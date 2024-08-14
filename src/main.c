@@ -8,6 +8,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -38,8 +39,15 @@ int main(int argc, char **argv) {
     }
   }
 
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j < SIZE; j++) {
+      sudoku[i][j] = 0;
+    }
+  }
+
   calcCheats(cheats, sudoku);
   updateColors(&scheme);
+  getSudokuFromCache(sudoku, "sudoku-cache");
 
   InitWindow(500, 500, "Sudoku GUI");
   Font font = LoadFontEx("resources/montserrat.ttf", 256, 0, 1000);
@@ -68,7 +76,8 @@ int main(int argc, char **argv) {
               j <= MAX(visualpos.x, highlight.x)) {
             color = scheme.lowlight;
           }
-        } else if (md == HIGHLIGHT && hlnum == sudoku[i][j] && sudoku[i][j] != 0) {
+        } else if (md == HIGHLIGHT && hlnum == sudoku[i][j] &&
+                   sudoku[i][j] != 0) {
           color = scheme.highlight;
         }
 
@@ -283,4 +292,5 @@ int main(int argc, char **argv) {
   }
   UnloadFont(font);
   CloseWindow();
+  cacheSudoku(sudoku, "sudoku-cache");
 }

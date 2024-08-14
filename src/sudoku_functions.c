@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #include "sudoku_functions.h"
@@ -167,4 +168,82 @@ void calcCheats(bool cheats[SIZE][SIZE][SIZE], char sudoku[SIZE][SIZE]) {
       }
     }
   }
+}
+
+void cacheSudoku(char sudoku[SIZE][SIZE], char *sudokufile) {
+  remove(sudokufile);
+
+  FILE *cache = fopen(sudokufile, "w");
+  if (cache == NULL) {
+    fprintf(stderr, "error opening sudokufile\n");
+    return;
+  }
+
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j < SIZE; j++) {
+      fprintf(cache, "%c", sudoku[i][j] + '0');
+    }
+  }
+
+  fclose(cache);
+}
+
+void cacheNotes(bool notes[SIZE][SIZE][SIZE], char *notefile) {
+  FILE *cache = fopen(notefile, "w");
+  if (cache == NULL) {
+    fprintf(stderr, "error opening notefile\n");
+    return;
+  }
+
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j < SIZE; j++) {
+      for (int k = 0; k < SIZE; k++) {
+        fprintf(cache, "%c", notes[i][j][k] ? '1' : '0');
+      }
+    }
+  }
+
+  fclose(cache);
+}
+
+int getSudokuFromCache(char sudoku[SIZE][SIZE], char *filename) {
+  FILE *cache = fopen(filename, "r");
+  if (cache == NULL) {
+    return -1;
+  }
+
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j < SIZE; j++) {
+      char buffer = fgetc(cache);
+      if (buffer == EOF) {
+        fclose(cache);
+        return -1;
+      }
+      sudoku[i][j] = buffer - '0';
+    }
+  }
+
+  fclose(cache);
+}
+
+void getNotesFromCache(bool notes[SIZE][SIZE][SIZE], char *filename) {
+  FILE *cache = fopen(filename, "r");
+  if (cache == NULL) {
+    return;
+  }
+
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j < SIZE; j++) {
+      for (int k = 0; k < SIZE; k++) {
+        char buffer = fgetc(cache);
+        if (buffer == EOF) {
+          fclose(cache);
+          return;
+        }
+        notes[i][j][k] = (buffer == '1');
+      }
+    }
+  }
+
+  fclose(cache);
 }
