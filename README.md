@@ -15,10 +15,6 @@ install the build-essential package
 
 ## how to run
 `make run` inside the git directory 
-OR
-`make cheat` if you want to be a cheater and have the ability to auto generate notes
-
-
 
 ## how to use
 v - visual mode, press number after selecting an area - all selected nodes get that number added as a node <br>

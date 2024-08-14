@@ -20,10 +20,6 @@ run :
 	make
 	$(OUTPUT)
 
-cheat : 
-	make
-	$(OUTPUT) cheat
-
 clean : 
 	rm $(OBJFILES) $(OUTPUT)
 

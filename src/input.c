@@ -1,7 +1,8 @@
 #include "input.h"
 #include <raylib.h>
 
-int handleInput(int *row, int *col, char ch, mode *md, int *num, Scheme *scheme) {
+int handleInput(int *row, int *col, char ch, mode *md, int *num,
+                Scheme *scheme) {
   switch (ch) {
   case 'h': {
     if (*col > 0) {
@@ -46,6 +47,11 @@ int handleInput(int *row, int *col, char ch, mode *md, int *num, Scheme *scheme)
     return -1;
     break;
   }
+  case 'y': {
+    (*md) = HIGHLIGHT;
+    return -1;
+    break;
+  }
   case 'v': {
     (*md) = VISUAL;
     return -2;
@@ -60,13 +66,16 @@ int handleInput(int *row, int *col, char ch, mode *md, int *num, Scheme *scheme)
     break;
   }
   default:
-    if (ch > '0' && ch <= '9') {
+    if (ch >= '0' && ch <= '9') {
       (*num) = ch - '0';
       return 0;
     }
     if (IsKeyPressed(KEY_TAB)) {
       scheme->th = scheme->th == 1 ? 0 : scheme->th + 1;
       updateColors(scheme);
+    }
+    if (IsKeyPressed(KEY_ESCAPE)) {
+      (*md) = INSERT;
     }
   }
   return 1;

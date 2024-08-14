@@ -130,7 +130,10 @@ void getMissingRow(int row, bool missing[SIZE], char sudoku[SIZE][SIZE]) {
 void calcCheats(bool cheats[SIZE][SIZE][SIZE], char sudoku[SIZE][SIZE]) {
   for (int i = 0; i < SIZE; i++) {
     for (int j = 0; j < SIZE; j++) {
-      bool missing[] = {true, true, true, true, true, true, true, true, true};
+      bool missing[SIZE];
+      for (int k = 0; k < SIZE; k++) {
+        missing[k] = cheats[i][j][k];
+      }
       for (int num = 0; num < SIZE; num++) {
         for (int col = 0; col < SIZE; col++) {
           if (sudoku[i][col] == num + 1) {

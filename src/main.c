@@ -6,6 +6,7 @@
 #include "sudoku_functions.h"
 #include <math.h>
 #include <raylib.h>
+#include <raymath.h>
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
@@ -16,24 +17,34 @@
 int main(int argc, char **argv) {
   bool missing[SIZE];
   Scheme scheme;
-  pos startpos;
+  pos visualpos;
   char ch[2];
   pos highlight = {4, 4};
   mode md = INSERT;
+  int hlnum = -1;
+  int counter = 0;
   char should = 0;
   char sudoku[SIZE][SIZE] = {0};
   bool notes[SIZE][SIZE][SIZE] = {false};
-  bool cheats[SIZE][SIZE][SIZE] = {false};
+  bool cheats[SIZE][SIZE][SIZE] = {true};
   bool cheating = false;
-  bool cheatable = !(argc == 1);
   scheme.th = NORMAL;
   ch[1] = '\0';
+
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j < SIZE; j++) {
+      for (int k = 0; k < SIZE; k++) {
+        cheats[i][j][k] = true;
+      }
+    }
+  }
 
   calcCheats(cheats, sudoku);
   updateColors(&scheme);
 
   InitWindow(500, 500, "Sudoku GUI");
   Font font = LoadFontEx("resources/montserrat.ttf", 256, 0, 1000);
+  SetExitKey(KEY_BACKSPACE);
   SetTargetFPS(framerate);
   while (!WindowShouldClose()) {
     BeginDrawing();
@@ -41,7 +52,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         Color color = scheme.background;
-        if (md != VISUAL) {
+        if (md != VISUAL && md != HIGHLIGHT) {
           if (getBoxIndex(highlight.y, highlight.x) == getBoxIndex(i, j) ||
               (highlight.y == i || highlight.x == j)) {
             color = scheme.lowlight;
@@ -51,13 +62,15 @@ int main(int argc, char **argv) {
                sudoku[highlight.y][highlight.x] != 0)) {
             color = scheme.highlight;
           }
-        } else {
-          if (i >= MIN(startpos.y, highlight.y) &&
-              j >= MIN(startpos.x, highlight.x) &&
-              i <= MAX(startpos.y, highlight.y) &&
-              j <= MAX(startpos.x, highlight.x)) {
+        } else if (md == VISUAL) {
+          if (i >= MIN(visualpos.y, highlight.y) &&
+              j >= MIN(visualpos.x, highlight.x) &&
+              i <= MAX(visualpos.y, highlight.y) &&
+              j <= MAX(visualpos.x, highlight.x)) {
             color = scheme.lowlight;
           }
+        } else if (md == HIGHLIGHT && hlnum == sudoku[i][j] && sudoku[i][j] != 0) {
+          color = scheme.highlight;
         }
 
         DrawRectangle(j * (500 / 9) + j, i * (500 / 9) + i, (500 / 9),
@@ -75,6 +88,13 @@ int main(int argc, char **argv) {
                 continue;
               }
               char note[2] = {k + '1', '\0'};
+              if (md == HIGHLIGHT && hlnum == note[0] - '0') {
+                DrawRectangleV((Vector2){j * 55 + j + 18 * (k % 3) + 2,
+                                         i * 55 + i + 18 * floor(k / 3.0f)},
+                               Vector2Add(MeasureTextEx(font, note, 20, 0),
+                                          (Vector2){4, 0}),
+                               scheme.lowlight);
+              }
               DrawTextEx(font, note,
                          (Vector2){j * 55 + j + 18 * (k % 3) + 4,
                                    i * 55 + i + 18 * floor(k / 3.0f)},
@@ -86,6 +106,13 @@ int main(int argc, char **argv) {
                 continue;
               }
               char note[2] = {k + '1', '\0'};
+              if (md == HIGHLIGHT && hlnum == note[0] - '0') {
+                DrawRectangleV((Vector2){j * 55 + j + 18 * (k % 3) + 2,
+                                         i * 55 + i + 18 * floor(k / 3.0f)},
+                               Vector2Add(MeasureTextEx(font, note, 20, 0),
+                                          (Vector2){4, 0}),
+                               scheme.lowlight);
+              }
               DrawTextEx(font, note,
                          (Vector2){j * 55 + j + 18 * (k % 3) + 4,
                                    i * 55 + i + 18 * floor(k / 3.0f)},
@@ -105,8 +132,8 @@ int main(int argc, char **argv) {
     }
     int num;
 
-    switch (
-        handleInput(&highlight.y, &highlight.x, GetCharPressed(), &md, &num, &scheme)) {
+    switch (handleInput(&highlight.y, &highlight.x, GetCharPressed(), &md, &num,
+                        &scheme)) {
     case 0: {
       switch (md) {
       case INSERT: {
@@ -117,10 +144,12 @@ int main(int argc, char **argv) {
         } else if (isWinnable(sudoku) == 0) {
           return 0;
         }
-        calcCheats(cheats, sudoku);
+        if (cheating) {
+          calcCheats(cheats, sudoku);
+        }
         break;
       }
-      case NOTE:
+      case NOTE: {
         if (cheating) {
           cheats[highlight.y][highlight.x][num - 1] =
               !cheats[highlight.y][highlight.x][num - 1];
@@ -129,23 +158,30 @@ int main(int argc, char **argv) {
         notes[highlight.y][highlight.x][num - 1] =
             !notes[highlight.y][highlight.x][num - 1];
         break;
-      case VISUAL:
-        for (int i = MIN(startpos.y, highlight.y);
-             i < MAX(startpos.y, highlight.y) + 1; i++) {
-          for (int j = MIN(startpos.x, highlight.x);
-               j < MAX(startpos.x, highlight.x) + 1; j++) {
+      }
+      case VISUAL: {
+        for (int i = MIN(visualpos.y, highlight.y);
+             i < MAX(visualpos.y, highlight.y) + 1; i++) {
+          for (int j = MIN(visualpos.x, highlight.x);
+               j < MAX(visualpos.x, highlight.x) + 1; j++) {
             notes[i][j][num - 1] = !notes[i][j][num - 1];
           }
         }
         break;
-      default:
+      }
+      case HIGHLIGHT: {
+        hlnum = num;
         break;
       }
-      should = 0;
+      default:
+        should = 0;
+        break;
+      }
       break;
     }
     case -2: {
-      startpos = highlight;
+      visualpos = highlight;
+      counter++;
       should = 0;
       break;
     }
@@ -167,13 +203,12 @@ int main(int argc, char **argv) {
     }
     case -4: {
       if (should == 'c') {
-        cheating = cheatable ? !cheating : false;
+        cheating = !cheating;
         break;
       }
       should = 'c';
       break;
     }
-
     case -1: {
       should = 0;
       break;
@@ -181,6 +216,7 @@ int main(int argc, char **argv) {
     default:
       break;
     }
+
     switch (md) {
     case MISSING: {
       Vector2 offset = (Vector2){floor(500 / 2.0) - floor(100 / 2.0),
@@ -228,7 +264,8 @@ int main(int argc, char **argv) {
       offset.y += MeasureTextEx(font, ch, 15, 3).y + 9;
       offset.x = defaultX;
 
-      DrawTextEx(font, "C: ", (Vector2){offset.x, offset.y}, 15, 0, scheme.text);
+      DrawTextEx(font, "C: ", (Vector2){offset.x, offset.y}, 15, 0,
+                 scheme.text);
 
       offset.x += MeasureTextEx(font, "C: ", 15, 2).x;
 
@@ -243,6 +280,10 @@ int main(int argc, char **argv) {
     default:
       break;
     }
+
+    char text[2] = {counter + '0', '\0'};
+
+    DrawText(text, 0, 30, 50, ORANGE);
     EndDrawing();
   }
   UnloadFont(font);
