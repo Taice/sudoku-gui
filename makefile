@@ -20,6 +20,10 @@ run :
 	make
 	$(OUTPUT)
 
+check : 
+	make
+	$(OUTPUT) realtime
+
 clean : 
 	rm $(OBJFILES) $(OUTPUT)
 

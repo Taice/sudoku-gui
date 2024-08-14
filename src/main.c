@@ -28,6 +28,7 @@ int main(int argc, char **argv) {
   bool notes[SIZE][SIZE][SIZE] = {false};
   bool cheats[SIZE][SIZE][SIZE] = {true};
   bool cheating = false;
+  bool check = (argc != 1);
   scheme.th = NORMAL;
   ch[1] = '\0';
 
@@ -147,10 +148,12 @@ int main(int argc, char **argv) {
       case INSERT: {
         int dfault = sudoku[highlight.y][highlight.x];
         sudoku[highlight.y][highlight.x] = num;
-        if (isWinnable(sudoku) == -1) {
-          sudoku[highlight.y][highlight.x] = dfault;
-        } else if (isWinnable(sudoku) == 0) {
-          return 0;
+        if (check) {
+          if (isWinnable(sudoku) == -1) {
+            sudoku[highlight.y][highlight.x] = dfault;
+          } else if (isWinnable(sudoku) == 0) {
+            return 0;
+          }
         }
         if (cheating) {
           calcCheats(cheats, sudoku);
