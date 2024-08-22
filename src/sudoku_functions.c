@@ -17,18 +17,46 @@ short isWinnable(char sudoku[SIZE][SIZE]) {
 
   int row, col;
 
+  bool solution = false;
   if (isValid(clone)) {
     if (!findEmptySpace(clone, &row, &col)) {
       return 0;
     }
-    if (backtrack(clone)) {
+    int result = backtrack(clone, &solution);
+    if (result == -1) {
+      return -2;
+    } else if (result == 1) {
       return 1;
     }
   }
-
   return -1;
 }
 
+bool whereIsValid(char sudoku[SIZE][SIZE], int *row, int *col) {
+  bool rows[SIZE][SIZE] = {false};
+  bool cols[SIZE][SIZE] = {false};
+  bool boxes[SIZE][SIZE] = {false};
+
+  for (int i = 0; i < SIZE; i++) {
+    for (int j = 0; j < SIZE; j++) {
+      if (sudoku[i][j] != 0) {
+        int num = sudoku[i][j] - 1;
+        int box_index = getBoxIndex(i, j);
+
+        if (rows[i][num] || cols[j][num] || boxes[box_index][num]) {
+          (*row) = i;
+          (*col) = j;
+          return false;
+        }
+
+        rows[i][num] = true;
+        cols[j][num] = true;
+        boxes[box_index][num] = true;
+      }
+    }
+  }
+  return true;
+}
 bool isValid(char sudoku[SIZE][SIZE]) {
   bool rows[SIZE][SIZE] = {false};
   bool cols[SIZE][SIZE] = {false};
@@ -64,25 +92,35 @@ bool findEmptySpace(char sudoku[SIZE][SIZE], int *row, int *col) {
   return false;
 }
 
-bool backtrack(char sudoku[SIZE][SIZE]) {
+int backtrack(char sudoku[SIZE][SIZE], bool *foundSolution) {
   int row, col;
 
   if (!findEmptySpace(sudoku, &row, &col)) {
-    return true;
+    if (*foundSolution) {
+      return -1;
+
+    } else {
+      *foundSolution = true;
+      return 1;
+    }
   }
 
   for (int num = 1; num <= SIZE; num++) {
     sudoku[row][col] = num;
 
     if (isValid(sudoku)) {
-      if (backtrack(sudoku)) {
-        return true;
+      int result = backtrack(sudoku, foundSolution);
+      if (result == -1) {
+        return -1;
+      }
+      if (result == 1 && num == SIZE) {
+        return 1;
       }
     }
 
     sudoku[row][col] = 0;
   }
-  return false;
+  return 0;
 }
 
 int getBoxIndex(int row, int col) {

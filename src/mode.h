@@ -1,9 +1,10 @@
 #pragma once
 
-typedef enum mode { 
-  VISUAL, 
-  NOTE, 
-  INSERT, 
-  MISSING, 
+typedef enum {
+  VISUAL,
+  MOUSEVISUAL,
+  NOTE,
+  INSERT,
+  MISSING,
   HIGHLIGHT,
 } mode;

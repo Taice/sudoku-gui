@@ -6,7 +6,8 @@
 #define SUBGRID_SIZE 3
 
 bool isValid(char sudoku[SIZE][SIZE]);
-bool backtrack(char sudoku[SIZE][SIZE]);
+bool whereIsValid(char sudoku[SIZE][SIZE], int *row, int *col);
+int backtrack(char sudoku[SIZE][SIZE], bool *foundSolution);
 short isWinnable(char sudoku[SIZE][SIZE]);
 int getBoxIndex(int row, int col);
 void getMissingBox(int row, int col, bool missing[SIZE],
