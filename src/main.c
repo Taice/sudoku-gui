@@ -27,10 +27,8 @@ int main(int argc, char **argv) {
   char should = 0;
   char sudoku[SIZE][SIZE] = {0};
   bool notes[SIZE][SIZE][SIZE] = {false};
-  bool cheats[SIZE][SIZE][SIZE] = {true};
+  bool cheats[SIZE][SIZE][SIZE];
   bool cheating = false;
-  bool check = (argc != 1);
-  bool insert = true;
   scheme.th = NORMAL;
   ch[1] = '\0';
 
@@ -154,7 +152,6 @@ int main(int argc, char **argv) {
     }
     case -4: {
       if (should == 'c') {
-        insert = false;
         cheating = !cheating;
         calcCheats(cheats, sudoku);
         break;

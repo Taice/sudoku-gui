@@ -262,6 +262,7 @@ int getSudokuFromCache(char sudoku[SIZE][SIZE], char *filename) {
   }
 
   fclose(cache);
+  return 0;
 }
 
 void getNotesFromCache(bool notes[SIZE][SIZE][SIZE], char *filename) {
